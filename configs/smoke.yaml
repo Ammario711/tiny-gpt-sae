@@ -1,0 +1,14 @@
+# Tiny CPU smoke run (~1M params) to check the pipeline end to end.
+model:
+  vocab_size: 50257
+  context_length: 64
+  n_layer: 2
+  n_head: 2
+  d_model: 64
+data_dir: data/tinystories_small
+out_dir: runs/smoke
+batch_size: 16
+max_steps: 200
+warmup_steps: 20
+eval_interval: 50
+eval_batches: 5

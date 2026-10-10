@@ -1,0 +1,19 @@
+# ~20M-parameter GPT on TinyStories (see flagship spec, Milestone 2).
+# Step counts are a starting point, not tuned values.
+model:
+  vocab_size: 50257
+  context_length: 256
+  n_layer: 6
+  n_head: 6
+  d_model: 384
+  dropout: 0.0
+data_dir: data/tinystories
+out_dir: runs/tinystories_20m
+seed: 1337
+batch_size: 64
+max_steps: 20000
+lr: 6.0e-4
+min_lr: 6.0e-5
+warmup_steps: 500
+eval_interval: 500
+checkpoint_steps: [0, 100, 200, 500, 1000, 2000, 5000, 10000, 15000]

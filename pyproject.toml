@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tiny-gpt-sae"
+version = "0.1.0"
+description = "A small GPT trained from scratch on TinyStories, plus a sparse-autoencoder interpretability study of its activations."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Ammar Arshad" }]
+requires-python = ">=3.10"
+dependencies = ["torch>=2.2", "numpy", "pyyaml", "tiktoken"]
+
+[project.optional-dependencies]
+data = ["datasets"]
+dev = ["pytest", "ruff"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
