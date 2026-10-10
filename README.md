@@ -2,7 +2,7 @@
 
 Training a small GPT from scratch on [TinyStories](https://arxiv.org/abs/2305.07759), then using **sparse autoencoders (SAEs)** to find interpretable features in its activations and to study **when those features emerge during training**.
 
-> Status: **Milestone 1 (model + training pipeline) complete.** No trained models or results yet. This README will only report results once they've been measured.
+> Status: the GPT is trained (15,000 steps on a Kaggle T4, val loss 1.58) and a 9-config TopK SAE sweep on layer 3 is done: 96.6–98.9% of CE loss recovered at L0 16–64. Numbers, the sparsity-vs-fidelity plot and a hand review of 34 features are in [docs/results.md](docs/results.md). Steering/ablation and feature-emergence experiments are not done yet.
 
 ## Research questions
 1. Which interpretable features appear in the residual stream of a ~20M-parameter language model, and in which layers?
@@ -63,8 +63,8 @@ Open `notebooks/train_colab.ipynb` in Colab with a T4 GPU and run all cells. The
 ## Roadmap
 - [x] **M1: Model + pipeline.** GPT from scratch, data pipeline, training loop, tests, CI, Colab notebook with resume
 - [ ] **M2: Pretraining + evals.** Full TinyStories run, val loss curves, samples, checkpoints released on Hugging Face
-- [x] **M3: SAEs (code).** Activation caching, ReLU+L1 and TopK SAEs, dead-feature resampling, evals, feature inspection. Tested on synthetic data with a known dictionary; not yet run on the trained GPT
-- [ ] **M4: SAE evals.** Reconstruction (variance explained), CE loss recovered, L0, dead latents, auto-interpretability
+- [x] **M3: SAEs (code).** Activation caching, ReLU+L1 and TopK SAEs, dead-feature resampling, evals, feature inspection. Tested on synthetic data with a known dictionary, then run on the trained GPT
+- [ ] **M4: SAE evals.** Reconstruction (variance explained), CE loss recovered, L0, dead latents ([done](docs/results.md)); auto-interpretability still to do
 - [ ] **M5: Experiments.** Feature emergence across checkpoints; steering and ablation
 - [ ] **M6: Write-up.** Report, feature browser, reproducibility guide
 
