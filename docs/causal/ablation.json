@@ -1,0 +1,686 @@
+{
+ "1": {
+  "label": "\" to\" after \"the X thing\"",
+  "n_firing_found": 5246,
+  "n_tested": 150,
+  "max_activation": 7.644454479217529,
+  "target": {
+   "kl_mean": 0.011422640644013882,
+   "kl_median": 0.0023305872455239296,
+   "dlogp_next_mean": -0.017667878419160843
+  },
+  "matched_control": {
+   "kl_mean": 0.02712315320968628,
+   "kl_median": 0.0027944687753915787,
+   "dlogp_next_mean": -0.019465843215584755
+  },
+  "inactive_sanity_kl_max": 6.741873221471906e-06,
+  "most_dropped_tokens": [
+   [
+    " do",
+    27
+   ],
+   [
+    " them",
+    11
+   ],
+   [
+    " make",
+    8
+   ],
+   [
+    " you",
+    5
+   ],
+   [
+    " his",
+    4
+   ],
+   [
+    " her",
+    4
+   ],
+   [
+    " a",
+    4
+   ],
+   [
+    " me",
+    4
+   ]
+  ],
+  "examples": [
+   {
+    "context": ". He did not want to lose his rocks. They were very special[[ to]] him. ",
+    "activation": 2.138,
+    "kl": 0.0033,
+    "dlogp_next": -0.018,
+    "most_dropped": " him"
+   },
+   {
+    "context": " and bugs. They are careful not to hurt them. They are helpful[[ to]] the plants and",
+    "activation": 1.045,
+    "kl": 0.008,
+    "dlogp_next": -0.0429,
+    "most_dropped": " each"
+   },
+   {
+    "context": " person's best friend was very worried. They asked, \"What happened[[ to]] you? Where",
+    "activation": 1.02,
+    "kl": 0.0033,
+    "dlogp_next": -0.046,
+    "most_dropped": " you"
+   },
+   {
+    "context": " make a pond for the frogs and the fish. She says that will[[ help]] the garden and",
+    "activation": 0.937,
+    "kl": 0.0026,
+    "dlogp_next": 0.0331,
+    "most_dropped": " them"
+   },
+   {
+    "context": " it to his collection.   The ant was a great addition[[ to]] his food supply",
+    "activation": 1.218,
+    "kl": 0.003,
+    "dlogp_next": 0.0434,
+    "most_dropped": " Bob"
+   }
+  ]
+ },
+ "4": {
+  "label": "\" to\" after \"use it\"",
+  "n_firing_found": 1635,
+  "n_tested": 150,
+  "max_activation": 7.830626487731934,
+  "target": {
+   "kl_mean": 0.01541232131421566,
+   "kl_median": 0.0021528340876102448,
+   "dlogp_next_mean": -0.004033669829368591
+  },
+  "matched_control": {
+   "kl_mean": 0.020939575508236885,
+   "kl_median": 0.002624958986416459,
+   "dlogp_next_mean": -0.0040160189382731915
+  },
+  "inactive_sanity_kl_max": 2.3727479856461287e-05,
+  "most_dropped_tokens": [
+   [
+    " make",
+    25
+   ],
+   [
+    " of",
+    18
+   ],
+   [
+    " a",
+    12
+   ],
+   [
+    " something",
+    7
+   ],
+   [
+    " help",
+    6
+   ],
+   [
+    " be",
+    5
+   ],
+   [
+    " build",
+    3
+   ],
+   [
+    " her",
+    3
+   ]
+  ],
+  "examples": [
+   {
+    "context": " Mia like to play pretend. They have a big box that they use[[ as]] a van.",
+    "activation": 3.179,
+    "kl": 0.0049,
+    "dlogp_next": -0.0229,
+    "most_dropped": " a"
+   },
+   {
+    "context": " we try it?\" Anna is very kind and lets the other dolls use[[ her]] spoon. She",
+    "activation": 1.302,
+    "kl": 0.0015,
+    "dlogp_next": 0.0154,
+    "most_dropped": " fancy"
+   },
+   {
+    "context": " a carrot first.\" Daisy replied, \"I don't have a carrot[[ to]] give you,",
+    "activation": 1.12,
+    "kl": 0.0075,
+    "dlogp_next": 0.2688,
+    "most_dropped": " eat"
+   },
+   {
+    "context": " it turned out that his suggestion made everyone feel worse.  The[[ moral]] of the story",
+    "activation": 1.794,
+    "kl": 0.0001,
+    "dlogp_next": -0.0013,
+    "most_dropped": " of"
+   },
+   {
+    "context": ". She has an idea.  \"Boys, you need[[ to]] learn to respect",
+    "activation": 1.004,
+    "kl": 0.0016,
+    "dlogp_next": -0.0091,
+    "most_dropped": " learn"
+   }
+  ]
+ },
+ "14": {
+  "label": "\" to\"/\" of\" after \"way\"",
+  "n_firing_found": 3499,
+  "n_tested": 150,
+  "max_activation": 5.641329765319824,
+  "target": {
+   "kl_mean": 0.004722675774246454,
+   "kl_median": 0.0011179721914231777,
+   "dlogp_next_mean": -0.003645406337454915
+  },
+  "matched_control": {
+   "kl_mean": 0.010874474421143532,
+   "kl_median": 0.0016972084995359182,
+   "dlogp_next_mean": -0.003309448016807437
+  },
+  "inactive_sanity_kl_max": 9.321537800133228e-05,
+  "most_dropped_tokens": [
+   [
+    ".",
+    21
+   ],
+   [
+    " the",
+    18
+   ],
+   [
+    " to",
+    17
+   ],
+   [
+    ",",
+    11
+   ],
+   [
+    " home",
+    6
+   ],
+   [
+    "\n",
+    5
+   ],
+   [
+    " get",
+    5
+   ],
+   [
+    "<|endoftext|>",
+    4
+   ]
+  ],
+  "examples": [
+   {
+    "context": ". She wanted to go have some fun in the sand and cool off[[ from]] the heat.",
+    "activation": 0.91,
+    "kl": 0.0013,
+    "dlogp_next": -0.0135,
+    "most_dropped": " the"
+   },
+   {
+    "context": " But then out of nowhere, the cord dropped. It fell way down[[ and]] twirled around",
+    "activation": 0.8,
+    "kl": 0.0017,
+    "dlogp_next": 0.0283,
+    "most_dropped": " the"
+   },
+   {
+    "context": " Jack learned that being careful and taking their time was the best way to[[ have]] fun.<|endoftext|>",
+    "activation": 2.622,
+    "kl": 0.009,
+    "dlogp_next": -0.0313,
+    "most_dropped": " fun"
+   },
+   {
+    "context": " the oyster for herself. She acted mean and pushed Ben away.[[ ]] \"Go",
+    "activation": 0.735,
+    "kl": 0.0,
+    "dlogp_next": -0.0,
+    "most_dropped": "\n"
+   },
+   {
+    "context": " When he got there, he realized that his treasure wasn't worth risking[[ his]] safety for.",
+    "activation": 0.811,
+    "kl": 0.0022,
+    "dlogp_next": -0.0238,
+    "most_dropped": " life"
+   }
+  ]
+ },
+ "29": {
+  "label": "\"Once\" starting a new story",
+  "n_firing_found": 3960,
+  "n_tested": 150,
+  "max_activation": 4.774486064910889,
+  "target": {
+   "kl_mean": 0.0002768826379906386,
+   "kl_median": 0.00024541839957237244,
+   "dlogp_next_mean": -0.0005810350994579494
+  },
+  "matched_control": {
+   "kl_mean": 0.0025834571570158005,
+   "kl_median": 0.00014903393457643688,
+   "dlogp_next_mean": -0.0008890936733223498
+  },
+  "inactive_sanity_kl_max": 0.00025603966787457466,
+  "most_dropped_tokens": [
+   [
+    " upon",
+    143
+   ],
+   [
+    " there",
+    6
+   ],
+   [
+    " and",
+    1
+   ]
+  ],
+  "examples": [
+   {
+    "context": " kind and having a best friend helps you stay warm and dry!<|endoftext|>[[Once]] there was a",
+    "activation": 1.671,
+    "kl": 0.0002,
+    "dlogp_next": 0.0437,
+    "most_dropped": " upon"
+   },
+   {
+    "context": " things with care and never broke another dish again. The end.<|endoftext|>[[Once]] upon a time",
+    "activation": 3.163,
+    "kl": 0.0011,
+    "dlogp_next": -0.0099,
+    "most_dropped": " upon"
+   },
+   {
+    "context": " Tim always remembered to close the dessert box to keep it fresh.<|endoftext|>[[Once]] upon a time",
+    "activation": 3.226,
+    "kl": 0.0005,
+    "dlogp_next": -0.0033,
+    "most_dropped": " upon"
+   },
+   {
+    "context": " of friends and nothing could ever break their bond. The end.<|endoftext|>[[Once]] upon a time",
+    "activation": 2.734,
+    "kl": 0.0,
+    "dlogp_next": -0.0002,
+    "most_dropped": " upon"
+   },
+   {
+    "context": " on, the elephant and his friends played with the tube together.<|endoftext|>[[Once]] upon a time",
+    "activation": 2.758,
+    "kl": 0.0,
+    "dlogp_next": -0.0003,
+    "most_dropped": " upon"
+   }
+  ]
+ },
+ "8": {
+  "label": "\" heard\" after \"Suddenly, they\"",
+  "n_firing_found": 4106,
+  "n_tested": 150,
+  "max_activation": 5.39198637008667,
+  "target": {
+   "kl_mean": 0.012635494582355022,
+   "kl_median": 0.0018051601946353912,
+   "dlogp_next_mean": -0.003074194071814418
+  },
+  "matched_control": {
+   "kl_mean": 0.008647977374494076,
+   "kl_median": 0.0007932354928925633,
+   "dlogp_next_mean": -0.011538814753293991
+  },
+  "inactive_sanity_kl_max": 9.083165787160397e-05,
+  "most_dropped_tokens": [
+   [
+    " little",
+    48
+   ],
+   [
+    " a",
+    30
+   ],
+   [
+    " voice",
+    26
+   ],
+   [
+    " loud",
+    5
+   ],
+   [
+    " noise",
+    5
+   ],
+   [
+    " mom",
+    4
+   ],
+   [
+    " his",
+    4
+   ],
+   [
+    " it",
+    3
+   ]
+  ],
+  "examples": [
+   {
+    "context": " nosy like the squirrel.<|endoftext|>Once upon a time, there was[[ a]] wise owl who",
+    "activation": 0.363,
+    "kl": 0.0001,
+    "dlogp_next": -0.0049,
+    "most_dropped": " little"
+   },
+   {
+    "context": " with flowers all around it.   \"Hey there,\" said[[ a]] voice coming from",
+    "activation": 1.035,
+    "kl": 0.0027,
+    "dlogp_next": -0.0749,
+    "most_dropped": " voice"
+   },
+   {
+    "context": " bed and hugged his pillow.  The next morning, he heard[[ a]] strange noise.",
+    "activation": 2.504,
+    "kl": 0.0115,
+    "dlogp_next": 0.2373,
+    "most_dropped": " knock"
+   },
+   {
+    "context": " through a park on her own, when all of a sudden she heard[[ a]] noise. It",
+    "activation": 2.442,
+    "kl": 0.0221,
+    "dlogp_next": -0.1033,
+    "most_dropped": " voice"
+   },
+   {
+    "context": " to the end of the long hallway.   Suddenly, she[[ heard]] a noisy r",
+    "activation": 5.022,
+    "kl": 0.0458,
+    "dlogp_next": -0.1103,
+    "most_dropped": " a"
+   }
+  ]
+ },
+ "19": {
+  "label": "\" even\" after \"learned that\"",
+  "n_firing_found": 3773,
+  "n_tested": 150,
+  "max_activation": 6.483936309814453,
+  "target": {
+   "kl_mean": 0.007173688616603613,
+   "kl_median": 0.0009054224938154221,
+   "dlogp_next_mean": 0.007206803187727928
+  },
+  "matched_control": {
+   "kl_mean": 0.01476770918816328,
+   "kl_median": 0.0017856243066489697,
+   "dlogp_next_mean": -0.009879769757390022
+  },
+  "inactive_sanity_kl_max": 1.0831994586624205e-05,
+  "most_dropped_tokens": [
+   [
+    ",",
+    19
+   ],
+   [
+    " we",
+    12
+   ],
+   [
+    ".",
+    9
+   ],
+   [
+    " is",
+    8
+   ],
+   [
+    " he",
+    8
+   ],
+   [
+    "\u00e2",
+    7
+   ],
+   [
+    " the",
+    7
+   ],
+   [
+    " it",
+    5
+   ]
+  ],
+  "examples": [
+   {
+    "context": " Maybe it's over there.\" She pointed to a big sandcastle that[[ some]] other kids had",
+    "activation": 1.33,
+    "kl": 0.0117,
+    "dlogp_next": 0.2212,
+    "most_dropped": " people"
+   },
+   {
+    "context": " at noon and check on its treasure. It was happy to see that[[ no]] one had stolen",
+    "activation": 1.704,
+    "kl": 0.0006,
+    "dlogp_next": 0.0041,
+    "most_dropped": " other"
+   },
+   {
+    "context": " Timmy's mom told him[[ that]] they were going",
+    "activation": 0.576,
+    "kl": 0.0004,
+    "dlogp_next": 0.0329,
+    "most_dropped": " it"
+   },
+   {
+    "context": " way out of the maze. From that day on, Max knew that[[ even]] when things seemed",
+    "activation": 5.904,
+    "kl": 0.0877,
+    "dlogp_next": 0.2042,
+    "most_dropped": " though"
+   },
+   {
+    "context": "   John and Milly were disappointed, so they demanded that[[ mum]] find them some",
+    "activation": 1.46,
+    "kl": 0.004,
+    "dlogp_next": 0.2142,
+    "most_dropped": " take"
+   }
+  ]
+ },
+ "22": {
+  "label": "opening quote after angry \"said,\"",
+  "n_firing_found": 6891,
+  "n_tested": 150,
+  "max_activation": 5.567850112915039,
+  "target": {
+   "kl_mean": 0.011716494336724281,
+   "kl_median": 0.004055902361869812,
+   "dlogp_next_mean": -0.013209499418735504
+  },
+  "matched_control": {
+   "kl_mean": 0.013254125602543354,
+   "kl_median": 0.003419250249862671,
+   "dlogp_next_mean": -0.027644548565149307
+  },
+  "inactive_sanity_kl_max": 0.001081647351384163,
+  "most_dropped_tokens": [
+   [
+    "That",
+    31
+   ],
+   [
+    "No",
+    16
+   ],
+   [
+    "What",
+    15
+   ],
+   [
+    "Look",
+    9
+   ],
+   [
+    "You",
+    9
+   ],
+   [
+    "I",
+    5
+   ],
+   [
+    "Hello",
+    5
+   ],
+   [
+    "This",
+    5
+   ]
+  ],
+  "examples": [
+   {
+    "context": " line had gotten much shorter.   Joey happily shouted,[[ \"]]Mom look!",
+    "activation": 0.609,
+    "kl": 0.0016,
+    "dlogp_next": 0.0582,
+    "most_dropped": "That"
+   },
+   {
+    "context": " building with a pond in the middle.   John said,[[ \"]]Oh, that",
+    "activation": 1.186,
+    "kl": 0.0094,
+    "dlogp_next": -0.0868,
+    "most_dropped": "What"
+   },
+   {
+    "context": " ran to the door. Mom saw her and was angry.  [[\"]]Lily,",
+    "activation": 3.719,
+    "kl": 0.0114,
+    "dlogp_next": 0.0388,
+    "most_dropped": "Hey"
+   },
+   {
+    "context": " stars. Do you want a snack?\"  Lily says,[[ \"]]Yes, I",
+    "activation": 0.714,
+    "kl": 0.0011,
+    "dlogp_next": 0.0151,
+    "most_dropped": "No"
+   },
+   {
+    "context": " the phone now. Goodbye, friend.\"  The voice said,[[ \"]]Goodbye,",
+    "activation": 2.251,
+    "kl": 0.0036,
+    "dlogp_next": 0.018,
+    "most_dropped": "Thank"
+   }
+  ]
+ },
+ "26": {
+  "label": "\" breath\" in \"took a deep breath\"",
+  "n_firing_found": 956,
+  "n_tested": 150,
+  "max_activation": 8.883085250854492,
+  "target": {
+   "kl_mean": 0.007262372877448797,
+   "kl_median": 0.0009626578539609909,
+   "dlogp_next_mean": -0.003527306253090501
+  },
+  "matched_control": {
+   "kl_mean": 0.01105012558400631,
+   "kl_median": 0.0013389401137828827,
+   "dlogp_next_mean": 0.013079870492219925
+  },
+  "inactive_sanity_kl_max": 6.105960346758366e-05,
+  "most_dropped_tokens": [
+   [
+    " and",
+    46
+   ],
+   [
+    ".",
+    10
+   ],
+   [
+    " little",
+    9
+   ],
+   [
+    " of",
+    9
+   ],
+   [
+    " down",
+    6
+   ],
+   [
+    ",",
+    5
+   ],
+   [
+    " rabbit",
+    5
+   ],
+   [
+    " man",
+    4
+   ]
+  ],
+  "examples": [
+   {
+    "context": " put the rest away.   Lily took a deep breath[[ and]] threw the candy",
+    "activation": 1.134,
+    "kl": 0.003,
+    "dlogp_next": 0.0837,
+    "most_dropped": " decided"
+   },
+   {
+    "context": " through the windows. Everywhere she looked, she saw something that took her[[ breath]] away; a",
+    "activation": 5.706,
+    "kl": 0.0623,
+    "dlogp_next": 0.1066,
+    "most_dropped": " and"
+   },
+   {
+    "context": "elly swamp to get to the other side. She gathered all of her[[ courage]] and started to",
+    "activation": 0.848,
+    "kl": 0.0005,
+    "dlogp_next": -0.0035,
+    "most_dropped": ","
+   },
+   {
+    "context": " the warm summer evenings, she sat in her garden and listened to the[[ calm]] whispers of nature",
+    "activation": 1.999,
+    "kl": 0.0267,
+    "dlogp_next": -0.0018,
+    "most_dropped": "ness"
+   },
+   {
+    "context": " would dare to do it.  So, Jeff took a deep[[ breath]] and carefully crawled",
+    "activation": 7.562,
+    "kl": 0.0067,
+    "dlogp_next": -0.0169,
+    "most_dropped": " and"
+   }
+  ]
+ }
+}

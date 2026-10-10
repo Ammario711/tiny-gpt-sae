@@ -107,6 +107,50 @@ Takeaways:
   story (F29), "Suddenly, they heard" plot turns (F8), "learned that even..." morals
   (F19), and "became best friends. They..." endings (F16).
 
+## Causal tests: ablation and steering (16x_k32, layer 3)
+
+Script: `scripts/causal_experiments.py`, run on a Kaggle T4. Raw outputs are in [`docs/causal/`](causal/).
+For 8 hand-labelled features, the feature was zero-ablated at 150 randomly sampled positions where it fires
+(not just top activations), and the change in the next-token distribution was measured. As a matched control,
+at the same positions a *different* active feature with the closest activation was ablated instead.
+A sanity check ablated each feature where it is inactive (max KL ≤ 0.001, so the hook is clean).
+
+| feature | label | KL target (mean / median) | KL matched control (mean / median) | top dropped tokens |
+|---|---|---|---|---|
+| 1 | " to" after "the X thing" | 0.011 / 0.002 | 0.027 / 0.003 | ` do`×27, ` them`×11, ` make`×8 |
+| 4 | " to" after "use it" | 0.015 / 0.002 | 0.021 / 0.003 | ` make`×25, ` of`×18, ` a`×12 |
+| 14 | " to"/" of" after "way" | 0.005 / 0.001 | 0.011 / 0.002 | `.`×21, ` the`×18, ` to`×17 |
+| 29 | "Once" starting a new story | 0.000 / 0.000 | 0.003 / 0.000 | ` upon`×143, ` there`×6 |
+| 8 | " heard" after "Suddenly, they" | 0.013 / 0.002 | 0.009 / 0.001 | ` little`×48, ` a`×30, ` voice`×26 |
+| 19 | " even" after "learned that" | 0.007 / 0.001 | 0.015 / 0.002 | `,`×19, ` we`×12, `.`×9 |
+| 22 | opening quote after angry "said," | 0.012 / 0.004 | 0.013 / 0.003 | `That`×31, `No`×16, `What`×15 |
+| 26 | " breath" in "took a deep breath" | 0.007 / 0.001 | 0.011 / 0.001 | ` and`×46, `.`×10, ` little`×9 |
+
+**Ablation is essentially a null result.** Removing any single feature barely moves the next-token
+distribution (median KL 0.001–0.004 nats), and no target feature has a larger effect than its matched
+control; for 6 of 8 the control's mean KL is actually higher. With 32 features active per token, the model's
+prediction is evidently robust to losing any one of them, so single-feature zero-ablation is not a sensitive
+test of these labels. The *direction* of the effect is often label-consistent even though the size is tiny:
+feature 29 ("Once") lowers ` upon` in 143/150 cases, the " to" features (1, 4) mostly lower infinitive verbs
+(` do`, ` make`), feature 8 lowers things one hears (` voice`, ` noise`, ` loud`), and feature 22 lowers
+quote openers (`That`, `No`, `What`). Feature 19's label is not supported by this test.
+
+**Steering is clearer for some features.** Each feature was clamped to 1× and 3× its max observed activation at
+every position while generating 60 tokens from three prompts (one sample per setting, temperature 0.8, so this
+is qualitative). At 3×:
+- Feature 26 (deep breath) takes over generation on every prompt: "it would breath from deep down… breath, be calm".
+  Strong support for the label.
+- Feature 8 (" heard") pushes toward sounds/voices on 2 of 3 prompts ("followed a voice… a little voice… voice voice voice").
+  Supports a "something heard" reading.
+- Feature 1 mildly shifts text toward "do / make" constructions ("She decided to do her special…", "make them a treat").
+- Features 4, 14, 19, 22, 29 show no clear label-specific effect; text just degrades at 3×.
+  At 1× all features are hard to distinguish from baseline sampling noise.
+
+Takeaway: 2 of 8 labels (26, 8) get clear causal support from steering, a few more get weak directional
+support from ablation, and the rest are unconfirmed. A better next test would ablate groups of related
+features or use activation patching on the specific tokens the label predicts, and sample several
+generations per steering setting.
+
 ## Next steps
 
 - Causal checks: ablate/steer a few of the clear features and measure the effect on
