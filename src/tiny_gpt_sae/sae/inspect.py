@@ -26,7 +26,7 @@ from .model import SAE, SAEConfig
 @torch.no_grad()
 def top_activations(
     model: GPT, sae: SAE, layer: int, ds: TokenDataset, n_batches: int, batch_size: int = 16,
-    top_n: int = 10, features: list[int] | None = None, seed: int = 0,
+    top_n: int = 10, features: list[int] | None = None, seed: int = 0, device: str = "cpu",
 ) -> dict[int, list[tuple[float, int, int]]]:
     """Return {feature: [(activation, batch_row_id, position), ...]} sorted descending.
 
@@ -38,11 +38,11 @@ def top_activations(
     best_ids = torch.zeros((len(feats), top_n, 2), dtype=torch.long)  # (window id, position)
     windows = []
     for b in range(n_batches):
-        x, _ = ds.get_batch(batch_size, g)
-        windows.append(x)
+        x, _ = ds.get_batch(batch_size, g, device)
+        windows.append(x.cpu())
         with capture_residual(model, layer) as store:
             model(x)
-        f = sae.encode(store[0].float())[..., feats]  # (B, T, F)
+        f = sae.encode(store[0].float())[..., feats.to(x.device)].cpu()  # (B, T, F)
         B, T, Fn = f.shape
         flat = f.reshape(B * T, Fn).T  # (F, B*T)
         k = min(top_n, B * T)
