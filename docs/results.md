@@ -151,9 +151,88 @@ support from ablation, and the rest are unconfirmed. A better next test would ab
 features or use activation patching on the specific tokens the label predicts, and sample several
 generations per steering setting.
 
+## Feature emergence across training (layer 3)
+
+Method (`scripts/emergence.py`, Kaggle T4): for each of the 10 training snapshots (nominal
+steps 0–12000; each was saved one step after its nominal step), cache 4M layer-3 tokens and train a
+16x TopK SAE (k=32, 2,500 steps, seed 1). Then, for each of the reference SAE's 6,144 features,
+take the best decoder cosine similarity in the snapshot SAE. A feature counts as "matched" at cos ≥ 0.7.
+
+**Baseline:** the same short recipe applied to the *final* model (step 15000) with a different seed.
+This is the ceiling for this measurement, and it's low. Only **11.7%** of reference features match
+at ≥ 0.7, with median best cosine **0.47**. The short-recipe SAE (4M tokens, 2.5k steps) differs
+too much from the reference SAE (10M tokens, 5k steps) for feature-level matching to be reliable.
+The numbers below should be read relative to this baseline, not to 100%.
+
+![Feature emergence](emergence.png)
+
+| step | held-out FVE | dead | frac matched (cos ≥ 0.7) | as % of baseline | median best cos |
+|---:|---:|---:|---:|---:|---:|
+| 0 | 0.896 | 0 | 0.000 | 0% | 0.187 |
+| 50 | 0.972 | 16 | 0.000 | 0% | 0.192 |
+| 100 | 0.981 | 109 | 0.000 | 0% | 0.195 |
+| 200 | 0.978 | 447 | 0.000 | 0% | 0.203 |
+| 500 | 0.936 | 219 | 0.000 | 0% | 0.229 |
+| 1000 | 0.906 | 14 | 0.004 | 3% | 0.280 |
+| 2000 | 0.891 | 4 | 0.018 | 15% | 0.335 |
+| 4000 | 0.883 | 3 | 0.055 | 47% | 0.397 |
+| 8000 | 0.877 | 2 | 0.096 | 82% | 0.447 |
+| 12000 | 0.874 | 7 | 0.108 | 92% | 0.466 |
+| 15000 (baseline, other seed) | 0.873 | 4 | 0.117 | 100% | 0.473 |
+
+What the data supports:
+
+- **Before ~step 500, nothing matches.** Median best cosine stays at ~0.19, which is about
+  what you get for a random-direction floor (step 0 is effectively untrained). The final
+  model's features aren't present yet in any form this method can detect.
+- **Most change happens between steps 1k and 8k.** The matched fraction goes from 3% to
+  82% of the baseline in that window, and median cosine rises steadily. After 8k it's
+  close to the baseline (12k: 92%).
+- Of the 718 features that end up stably matched (matched at a step and at every later one,
+  including the baseline), 19 are stable from step 1000, 78 by 2000, 197 by 4000, 319 by 8000,
+  459 by 12000, and 259 only in the baseline.
+- **High FVE early isn't a sign of good features.** SAEs on early snapshots reconstruct
+  *better* (FVE 0.97–0.98 at steps 50–200) while matching nothing, and many of their
+  features are dead (up to 447). The early residual stream is simpler and easier to
+  reconstruct, not more interpretable.
+
+Reviewed features (best cosine to the final feature; first *stable* step at ≥ 0.7):
+
+| feature | 1000 | 2000 | 4000 | 8000 | 12000 | baseline | first stable |
+|---|---:|---:|---:|---:|---:|---:|---|
+| F16 "became friends. They" | 0.30 | 0.56 | 0.57 | **0.91** | **0.84** | **0.92** | 8000 |
+| F30 " Jack" | **0.54** | 0.57 | 0.54 | 0.61 | **0.71** | 0.66 | – (baseline < 0.7) |
+| F4 " to" (use it to) | 0.22 | 0.39 | 0.52 | 0.64 | **0.71** | 0.57 | – |
+| F21 "small town" | 0.32 | 0.33 | 0.43 | 0.53 | 0.60 | **0.72** | baseline only |
+| F8 "Suddenly … heard" | 0.25 | 0.32 | 0.30 | 0.48 | 0.46 | 0.49 | – |
+| F19 "learned that even" | 0.22 | 0.27 | 0.56 | 0.50 | 0.40 | 0.45 | – |
+| F14 " to" (way to) | 0.27 | 0.42 | 0.39 | 0.53 | 0.40 | 0.45 | – |
+| F26 "deep breath" | 0.24 | 0.31 | 0.39 | 0.42 | 0.48 | 0.43 | – |
+| F1 " to" (the X thing to) | 0.26 | 0.38 | 0.35 | 0.40 | 0.35 | 0.38 | – |
+| F22 angry quote | 0.26 | 0.28 | 0.38 | 0.33 | 0.32 | 0.29 | – |
+| F29 "Once" (story start) | 0.21 | 0.23 | 0.24 | 0.28 | 0.21 | 0.26 | – |
+
+- Only F16 (and F21, only in the baseline) gets a clean first-appearance step. **For the
+  other nine, even the seed baseline is below 0.7**, so this run can't say when they emerge.
+  Their trajectories are within the seed-to-seed noise, not evidence of absence.
+- With that caveat, two patterns look real enough to follow up:
+  - **F30 (" Jack") is the earliest riser.** It's at 0.54 by step 1000, when most features are
+    still near 0.2–0.3. A specific-name token feature forming early fits the intuition that
+    token-identity features come before contextual ones, but it's one feature.
+  - **F16 ("became best friends. They") jumps between steps 4k and 8k** (0.57 → 0.91) and then stays matched.
+- F29 ("Once" at story start) never rises above ~0.28, even in the baseline. It doesn't
+  survive a re-training of the SAE at all, so it's probably a less robust feature than its
+  clean top activations suggested.
+
+Limitations: one seed per snapshot; a shorter SAE recipe than the reference; matching by
+decoder direction only (no activation-pattern matching); a single threshold. To make
+per-feature emergence claims, the next run should (a) use the reference recipe for every snapshot,
+(b) train 2–3 seeds per snapshot so each feature has its own seed-to-seed ceiling, and (c) also
+match by activation correlation on shared tokens.
+
 ## Next steps
 
 - Causal checks: ablate/steer a few of the clear features and measure the effect on
   next-token predictions.
 - Automated labeling over all 6,144 features, spot-checked against the hand labels here.
-- Use the saved early checkpoints to study when these features emerge during training.
+- Emergence: done (see above), but limited by a weak seed baseline. Re-run with the full SAE recipe and 2–3 seeds per snapshot.
