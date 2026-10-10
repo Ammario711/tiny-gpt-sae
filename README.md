@@ -18,6 +18,7 @@ src/tiny_gpt_sae/
               # bf16/fp16 mixed precision, exact checkpoint resume, log.jsonl
   utils.py    # seeding, device selection
 configs/      # YAML training configs (smoke run, ~20M model, Colab T4)
+kaggle/       # Kaggle GPU kernel script + metadata
 notebooks/    # train_colab.ipynb: Drive-backed, auto-resuming Colab training
 scripts/      # data preparation
 tests/        # shapes, causal masking, overfitting, determinism, LR schedule, config parsing
@@ -40,6 +41,9 @@ python -m tiny_gpt_sae.train --config configs/tinystories_20m.yaml
 
 ## Training on free Colab
 Open `notebooks/train_colab.ipynb` in Colab with a T4 GPU and run all cells. The tokenized data and checkpoints are stored on Google Drive. When a session ends, re-run the notebook and training resumes from `latest.pt`. On GPUs without bf16 (like the T4), the code uses fp16 autocast with a GradScaler.
+
+## Training on Kaggle
+`kaggle/train_kaggle.py` is a GPU kernel script. It clones this repo, tokenizes TinyStories, trains with `configs/kaggle.yaml` (with a 10 h wall-clock cap, inside Kaggle's 12 h limit), and writes checkpoints, `log.jsonl`, `loss.png` and `samples.txt` to `/kaggle/working`. Push it with `kaggle kernels push -p kaggle/`.
 
 ## Roadmap
 - [x] **M1: Model + pipeline.** GPT from scratch, data pipeline, training loop, tests, CI, Colab notebook with resume

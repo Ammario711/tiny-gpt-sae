@@ -51,11 +51,14 @@ def prepare_tinystories(
         ds = load_dataset(dataset_name, split=hf_split)
         if max_stories is not None:
             ds = ds.select(range(min(max_stories, len(ds))))
-        ids: list[int] = []
-        for row in ds:
-            ids.extend(tok.encode(row["text"]))
-            ids.append(tok.eot)
-        arr = np.array(ids, dtype=np.uint16)
+        # Tokenize in chunks with tiktoken's multithreaded batch encoder (much faster than one by one).
+        chunks: list[np.ndarray] = []
+        texts = ds["text"]
+        for i in range(0, len(texts), 10_000):
+            for ids in tok.enc.encode_ordinary_batch(texts[i : i + 10_000]):
+                ids.append(tok.eot)
+                chunks.append(np.array(ids, dtype=np.uint16))
+        arr = np.concatenate(chunks)
         tmp = out_dir / f"{split}.bin.tmp"
         arr.tofile(tmp)
         tmp.replace(out_dir / f"{split}.bin")  # only appears once fully written

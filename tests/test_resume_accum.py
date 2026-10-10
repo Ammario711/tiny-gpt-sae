@@ -75,3 +75,9 @@ def test_checkpoint_files_and_log(tmp_path):
 
 def test_amp_dtype_cpu_is_none():
     assert amp_dtype("cpu", True) is None
+
+
+def test_time_budget_stops_and_checkpoints(tmp_path):
+    _, losses = train(cfg(tmp_path, max_steps=1000, max_train_hours=0.0), ds(), log=False)
+    assert len(losses) == 1  # stops right after the first step
+    assert (tmp_path / "latest.pt").exists()

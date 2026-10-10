@@ -51,6 +51,7 @@ class TrainConfig:
     checkpoint_steps: list[int] = field(default_factory=list)  # extra kept snapshots (training-dynamics study)
     mixed_precision: bool = True  # only used on CUDA
     resume: bool = True  # continue from out_dir/latest.pt if it exists
+    max_train_hours: float | None = None  # wall-clock budget: checkpoint and stop cleanly (e.g. Kaggle's 12 h limit)
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> TrainConfig:
@@ -202,6 +203,10 @@ def train(
         if step in cfg.checkpoint_steps:
             save_checkpoint(out / f"ckpt_{step:06d}.pt", model, opt, scaler, gen, cfg, done)
         stopping = stop_after is not None and done >= stop_after
+        if cfg.max_train_hours is not None and time.time() - t0 > cfg.max_train_hours * 3600:
+            stopping = True
+            if log:
+                print(f"time budget of {cfg.max_train_hours} h reached at step {done}; saving and stopping")
         if done % cfg.checkpoint_interval == 0 or done == cfg.max_steps or stopping:
             save_checkpoint(latest, model, opt, scaler, gen, cfg, done)
         if stopping:

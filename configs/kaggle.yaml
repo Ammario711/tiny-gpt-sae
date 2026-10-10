@@ -1,0 +1,27 @@
+# ~20M-parameter run for a Kaggle GPU kernel (T4 or P100; 12 h session limit).
+# Sized conservatively: 15k steps x ~16k tokens ≈ 250M tokens. That finishes within
+# ~8 h even at 2 s/step, and max_train_hours is a hard stop that saves a checkpoint
+# before Kaggle kills the session. Leave ~1 h for data prep, plots and samples.
+model:
+  vocab_size: 50257
+  context_length: 256
+  n_layer: 6
+  n_head: 6
+  d_model: 384
+  dropout: 0.0
+data_dir: /kaggle/working/data/tinystories
+out_dir: /kaggle/working/run
+seed: 1337
+batch_size: 32
+grad_accum_steps: 2
+max_steps: 15000
+lr: 6.0e-4
+min_lr: 6.0e-5
+warmup_steps: 500
+eval_interval: 250
+eval_batches: 20
+checkpoint_interval: 500
+checkpoint_steps: [0, 50, 100, 200, 500, 1000, 2000, 4000, 8000, 12000]
+mixed_precision: true   # fp16 + GradScaler on T4/P100 (no bf16)
+resume: true
+max_train_hours: 10.0
