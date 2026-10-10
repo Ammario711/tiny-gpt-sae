@@ -1,0 +1,27 @@
+# ~20M-parameter run sized for free Colab (T4, 16 GB, fp16 + GradScaler).
+# Effective batch = 32 x 2 = 64 sequences x 256 tokens ≈ 16k tokens/step;
+# 18k steps ≈ 300M tokens (~0.6 epochs of TinyStories).
+# Throughput on a T4 hasn't been measured yet: time the first 200 steps and adjust
+# max_steps so the run fits in a few ~3-4 h free sessions. Resume is automatic.
+model:
+  vocab_size: 50257
+  context_length: 256
+  n_layer: 6
+  n_head: 6
+  d_model: 384
+  dropout: 0.0
+data_dir: /content/drive/MyDrive/tiny-gpt-sae/data/tinystories
+out_dir: /content/drive/MyDrive/tiny-gpt-sae/runs/colab_t4
+seed: 1337
+batch_size: 32
+grad_accum_steps: 2
+max_steps: 18000
+lr: 6.0e-4
+min_lr: 6.0e-5
+warmup_steps: 500
+eval_interval: 250
+eval_batches: 20
+checkpoint_interval: 250   # ~a few minutes of work lost at most if the session dies
+checkpoint_steps: [0, 50, 100, 200, 500, 1000, 2000, 4000, 8000, 12000]
+mixed_precision: true
+resume: true

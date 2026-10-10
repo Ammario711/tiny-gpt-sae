@@ -1,3 +1,5 @@
+import tempfile
+
 import numpy as np
 import torch
 
@@ -9,7 +11,8 @@ from tiny_gpt_sae.train import TrainConfig, lr_at, train
 def tiny_cfg(**overrides) -> TrainConfig:
     model = GPTConfig(vocab_size=64, context_length=16, n_layer=2, n_head=2, d_model=32)
     base = dict(model=model, device="cpu", batch_size=8, max_steps=150, lr=3e-3, min_lr=3e-4,
-                warmup_steps=10, mixed_precision=False)
+                warmup_steps=10, mixed_precision=False,
+                resume=False, out_dir=tempfile.mkdtemp())
     base.update(overrides)
     return TrainConfig(**base)
 

@@ -14,9 +14,11 @@ Training a small GPT from scratch on [TinyStories](https://arxiv.org/abs/2305.07
 src/tiny_gpt_sae/
   model.py    # GPT: config dataclass, causal self-attention, MLP, pre-LN blocks, weight tying
   data.py     # GPT-2 BPE tokenizer wrapper, TinyStories -> uint16 .bin, random-window batches
-  train.py    # AdamW, warmup + cosine LR, grad clipping, eval, checkpoints at chosen steps
+  train.py    # AdamW, warmup + cosine LR, grad clipping, grad accumulation,
+              # bf16/fp16 mixed precision, exact checkpoint resume, log.jsonl
   utils.py    # seeding, device selection
-configs/      # YAML training configs (smoke run, ~20M model)
+configs/      # YAML training configs (smoke run, ~20M model, Colab T4)
+notebooks/    # train_colab.ipynb: Drive-backed, auto-resuming Colab training
 scripts/      # data preparation
 tests/        # shapes, causal masking, overfitting, determinism, LR schedule, config parsing
 ```
@@ -36,8 +38,11 @@ python scripts/prepare_data.py --out data/tinystories
 python -m tiny_gpt_sae.train --config configs/tinystories_20m.yaml
 ```
 
+## Training on free Colab
+Open `notebooks/train_colab.ipynb` in Colab with a T4 GPU and run all cells. The tokenized data and checkpoints are stored on Google Drive. When a session ends, re-run the notebook and training resumes from `latest.pt`. On GPUs without bf16 (like the T4), the code uses fp16 autocast with a GradScaler.
+
 ## Roadmap
-- [x] **M1: Model + pipeline.** GPT from scratch, data pipeline, training loop, tests, CI
+- [x] **M1: Model + pipeline.** GPT from scratch, data pipeline, training loop, tests, CI, Colab notebook with resume
 - [ ] **M2: Pretraining + evals.** Full TinyStories run, val loss curves, samples, checkpoints released on Hugging Face
 - [ ] **M3: SAEs.** Activation caching; TopK and ReLU+L1 SAEs; dead-latent handling
 - [ ] **M4: SAE evals.** Reconstruction (variance explained), CE loss recovered, L0, dead latents, auto-interpretability

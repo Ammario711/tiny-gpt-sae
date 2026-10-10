@@ -45,6 +45,9 @@ def prepare_tinystories(
     out_dir.mkdir(parents=True, exist_ok=True)
     tok = Tokenizer()
     for split, hf_split in (("train", "train"), ("val", "validation")):
+        if (out_dir / f"{split}.bin").exists():
+            print(f"{split}.bin already exists, skipping (delete it to rebuild)")
+            continue
         ds = load_dataset(dataset_name, split=hf_split)
         if max_stories is not None:
             ds = ds.select(range(min(max_stories, len(ds))))
@@ -53,7 +56,9 @@ def prepare_tinystories(
             ids.extend(tok.encode(row["text"]))
             ids.append(tok.eot)
         arr = np.array(ids, dtype=np.uint16)
-        arr.tofile(out_dir / f"{split}.bin")
+        tmp = out_dir / f"{split}.bin.tmp"
+        arr.tofile(tmp)
+        tmp.replace(out_dir / f"{split}.bin")  # only appears once fully written
         print(f"{split}: {len(ds):,} stories -> {len(arr):,} tokens")
 
 
