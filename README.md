@@ -17,6 +17,13 @@ src/tiny_gpt_sae/
   train.py    # AdamW, warmup + cosine LR, grad clipping, grad accumulation,
               # bf16/fp16 mixed precision, exact checkpoint resume, log.jsonl
   utils.py    # seeding, device selection
+  sae/
+    activations.py  # forward hook on blocks[L]; cache residual stream to fp16 shards; shuffled batch store
+    model.py        # SAE: ReLU+L1 or TopK, tied/untied decoder, unit-norm decoder rows
+    train.py        # SAE training, L1 warmup, dead-feature resampling (python -m tiny_gpt_sae.sae.train)
+    evals.py        # L0, variance explained, dead/dense counts, CE loss with SAE spliced in
+    inspect.py      # top-activating contexts per feature -> features.json / features.html
+    cache.py        # CLI for activation caching
 configs/      # YAML training configs (smoke run, ~20M model, Colab T4)
 kaggle/       # Kaggle GPU kernel script + metadata
 notebooks/    # train_colab.ipynb: Drive-backed, auto-resuming Colab training
@@ -39,6 +46,14 @@ python scripts/prepare_data.py --out data/tinystories
 python -m tiny_gpt_sae.train --config configs/tinystories_20m.yaml
 ```
 
+## SAE pipeline (after a GPT checkpoint exists)
+```bash
+python -m tiny_gpt_sae.sae.cache   --gpt run/latest.pt --data data/tinystories/train.bin --layer 3 --out cache/layer3 --n-tokens 50000000 --device cuda
+python -m tiny_gpt_sae.sae.train   --config configs/sae_layer3.yaml
+python -m tiny_gpt_sae.sae.evals   --gpt run/latest.pt --sae runs/sae_layer3/sae.pt --data data/tinystories/val.bin --layer 3
+python -m tiny_gpt_sae.sae.inspect --gpt run/latest.pt --sae runs/sae_layer3/sae.pt --data data/tinystories/val.bin --layer 3 --out runs/sae_layer3/inspect
+```
+
 ## Training on free Colab
 Open `notebooks/train_colab.ipynb` in Colab with a T4 GPU and run all cells. The tokenized data and checkpoints are stored on Google Drive. When a session ends, re-run the notebook and training resumes from `latest.pt`. On GPUs without bf16 (like the T4), the code uses fp16 autocast with a GradScaler.
 
@@ -48,7 +63,7 @@ Open `notebooks/train_colab.ipynb` in Colab with a T4 GPU and run all cells. The
 ## Roadmap
 - [x] **M1: Model + pipeline.** GPT from scratch, data pipeline, training loop, tests, CI, Colab notebook with resume
 - [ ] **M2: Pretraining + evals.** Full TinyStories run, val loss curves, samples, checkpoints released on Hugging Face
-- [ ] **M3: SAEs.** Activation caching; TopK and ReLU+L1 SAEs; dead-latent handling
+- [x] **M3: SAEs (code).** Activation caching, ReLU+L1 and TopK SAEs, dead-feature resampling, evals, feature inspection. Tested on synthetic data with a known dictionary; not yet run on the trained GPT
 - [ ] **M4: SAE evals.** Reconstruction (variance explained), CE loss recovered, L0, dead latents, auto-interpretability
 - [ ] **M5: Experiments.** Feature emergence across checkpoints; steering and ablation
 - [ ] **M6: Write-up.** Report, feature browser, reproducibility guide

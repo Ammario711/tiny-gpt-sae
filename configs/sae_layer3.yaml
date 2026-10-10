@@ -1,0 +1,16 @@
+# TopK SAE on the residual stream after block 3 of the ~20M GPT (d_model 384), 16x expansion.
+# Hyperparameters are starting points to sweep, not tuned values.
+sae:
+  d_in: 384
+  n_features: 6144
+  kind: topk
+  k: 32
+  tied: false
+cache_dir: cache/layer3
+out_dir: runs/sae_layer3
+device: cuda
+batch_size: 4096
+steps: 20000
+lr: 3.0e-4
+resample_every: 2500
+resample_until: 15000
