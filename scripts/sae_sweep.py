@@ -78,7 +78,9 @@ def main() -> None:
             sae, hist = train_sae(cfg)
             sae.eval()
             rec = reconstruction_metrics(sae, val_acts)
-            rec.pop("fire_freq")
+            freq = rec.pop("fire_freq").cpu()
+            (out / name).mkdir(parents=True, exist_ok=True)
+            torch.save(freq, out / name / "fire_freq.pt")
             res = {"name": name, "expansion": exp, "k": k, "n_features": exp * d, **rec,
                    **downstream_loss(model, sae, a.layer, val_batches),
                    "train_final_mse": hist[-1]["mse"], "train_seconds": round(time.time() - t1)}
@@ -118,8 +120,7 @@ def main() -> None:
                           features=feats, device=device)
     render(top, top_activations.windows, Tokenizer().decode, out / a.inspect / "inspect", context=16)
     # Fire frequency per inspected feature, for picking non-dead, non-dense features to review.
-    with torch.no_grad():
-        freq = (sae.encode(val_acts) > 0).float().mean(0).cpu()
+    freq = torch.load(out / a.inspect / "fire_freq.pt")
     (out / a.inspect / "inspect" / "fire_freq.json").write_text(json.dumps({i: freq[i].item() for i in feats}))
     print(f"[timing] total: {time.time() - t0:.0f}s")
 

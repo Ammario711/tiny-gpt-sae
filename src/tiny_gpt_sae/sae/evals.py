@@ -59,21 +59,28 @@ def downstream_loss(model: GPT, sae: SAE, layer: int, batches: Iterable[tuple[to
 
 
 @torch.no_grad()
-def reconstruction_metrics(sae: SAE, acts: torch.Tensor, dense_threshold: float = 0.1) -> dict:
-    """acts: (N, d_in) held-out activations."""
-    xhat, f = sae(acts)
-    resid = (acts - xhat).pow(2).sum()
-    total = (acts - acts.mean(0)).pow(2).sum()
-    fire_freq = (f > 0).float().mean(0)  # (n_features,) fraction of tokens each feature fires on
+def reconstruction_metrics(sae: SAE, acts: torch.Tensor, dense_threshold: float = 0.1, chunk: int = 8192) -> dict:
+    """acts: (N, d_in) held-out activations. Processed in chunks so wide SAEs fit in GPU memory."""
+    mean = acts.mean(0)
+    resid = total = l0_sum = 0.0
+    fire_count = torch.zeros(sae.cfg.n_features, device=acts.device)
+    for x in acts.split(chunk):
+        xhat, f = sae(x)
+        resid += (x - xhat).pow(2).sum().item()
+        total += (x - mean).pow(2).sum().item()
+        active = f > 0
+        l0_sum += active.sum().item()
+        fire_count += active.sum(0)
+    n = len(acts)
+    fire_freq = fire_count / n  # (n_features,) fraction of tokens each feature fires on
     return {
-        "l0": (f > 0).float().sum(-1).mean().item(),
-        "fve": (1 - resid / total).item(),
-        "mse": (acts - xhat).pow(2).sum(-1).mean().item(),
+        "l0": l0_sum / n,
+        "fve": 1 - resid / total,
+        "mse": resid / n,
         "n_dead": int((fire_freq == 0).sum()),
         "n_dense": int((fire_freq > dense_threshold).sum()),
         "fire_freq": fire_freq,
     }
-
 
 def main() -> None:
     """CLI: python -m tiny_gpt_sae.sae.evals --gpt run/latest.pt --sae runs/sae_layer3/sae.pt \\
