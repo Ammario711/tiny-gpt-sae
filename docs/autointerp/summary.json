@@ -1,0 +1,11 @@
+{
+ "llm": "Qwen/Qwen2.5-7B-Instruct (4-bit)",
+ "n_features_total": 6144,
+ "n_labelled": 6144,
+ "n_scored": 6137,
+ "n_unclear": 1996,
+ "auroc_median": 0.9166666666666666,
+ "frac_auroc_ge_0.8": 0.6302753788496008,
+ "frac_balanced_acc_ge_0.8": 0.06664494052468632,
+ "hours": 3.4460888389084072
+}

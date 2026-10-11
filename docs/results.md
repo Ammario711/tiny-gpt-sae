@@ -230,9 +230,66 @@ per-feature emergence claims, the next run should (a) use the reference recipe f
 (b) train 2–3 seeds per snapshot so each feature has its own seed-to-seed ceiling, and (c) also
 match by activation correlation on shared tokens.
 
+## Automated feature labelling (16x_k32, layer 3)
+
+Method (`scripts/autointerp.py`, run on a Kaggle T4 in 3.4 h): for every one of the 6,144
+features, Qwen2.5-7B-Instruct (4-bit) was shown 10 top-activating contexts (from 400
+validation batches, activating token marked) and asked for a ≤12-word label or "unclear".
+Each label was then scored on held-out data: 6 other top-activating contexts vs. 6 random
+contexts where the feature is inactive; the same LLM gave P(Yes) for "does the description
+apply to the marked token?". Raw outputs: `docs/autointerp/labels.jsonl`, `summary.json`.
+
+![AUROC histogram](autointerp.png)
+
+| | features | median AUROC | AUROC ≥ 0.8 | AUROC = 1 |
+|---|---:|---:|---:|---:|
+| all scored | 6,137 | 0.92 | 63.0% | 40.4% |
+| given a label | 4,141 | 1.00 | 87.9% | 58.8% |
+| "unclear" | 1,996 | 0.47 | 11.4% | 0.9% |
+
+7 features had too few activations to score. 1,996 (32.5%) were labelled "unclear".
+
+How to read this, honestly:
+
+- The "unclear" group scoring at chance (median 0.47) is a useful sanity check: the scorer
+  is not just rewarding any text.
+- The labelled-feature AUROCs are **optimistic**. Only 6 + 6 examples per feature (so AUROC
+  moves in steps of 1/36), and the negatives are random inactive contexts, which is an easy
+  contrast; a label that names the story topic can pass without pinning the token. There
+  are no hard negatives (same token, feature off) yet.
+- Balanced accuracy at a fixed P(Yes) = 0.5 threshold is **uninformative**: it is exactly
+  0.5 for 78% of features (only 6.7% reach ≥ 0.8), meaning the judge's P(Yes) rarely
+  straddles 0.5 between positives and negatives. Its ranking (AUROC) is usable; its
+  calibration is not.
+- Labels repeat across features ("three years old" ×6, "knocked on the door" ×4, …),
+  consistent with the LLM describing story content rather than the marked token.
+
+### Against the 34 hand labels (features 0–33)
+
+| outcome | n | features |
+|---|---:|---|
+| matches the hand label | 16 | 0, 2, 3, 4, 5, 7, 8, 11, 18, 19, 21, 22, 25, 26, 29, 30 |
+| partly right (right context, misses the token, or vice versa) | 5 | 6, 9, 12, 13, 16 |
+| wrong | 3 | 10 ("on the subway" vs. preposition after "liked to play"), 15 ("too late" vs. " was" after "it"), 32 ("the water" vs. " the" after near/in) |
+| LLM labelled, hand said unclear | 1 | 33 ("told. Mom helped John…") |
+| LLM "unclear", hand label clear | 8 | 1, 14, 17, 20, 23, 24, 27, 28 |
+| both unclear | 1 | 31 |
+
+So the LLM matched or partly matched 21 of the 32 hand-clear features (66%). Its misses
+are systematic: 7 of the 8 features it gave up on are the context-dependent *function-token*
+features (" to" after "the X thing", " to"/" of" after "way", sentence-initial "And",
+" your" after "brush", " what" after "wondered", " not", "Who"), the most common feature
+type in the hand review. It does best on content-word features ("rest", "breath", "town",
+"Once upon a time"). The 9 LLM-unclear features among 0–33 scored AUROC 0.14–0.89, so the
+"unclear" label is not just a fallback for dead features.
+
+Limitations and next steps: add hard negatives (same token where the feature is off),
+score with more examples (e.g. 20 + 20), use a separate (or stronger) scorer from the
+explainer, and prompt explicitly for the marked token plus its preceding context.
+
 ## Next steps
 
 - Causal checks: ablate/steer a few of the clear features and measure the effect on
   next-token predictions.
-- Automated labeling over all 6,144 features, spot-checked against the hand labels here.
+- Automated labelling: done (see above). Re-run with hard negatives and more scoring examples.
 - Emergence: done (see above), but limited by a weak seed baseline. Re-run with the full SAE recipe and 2–3 seeds per snapshot.

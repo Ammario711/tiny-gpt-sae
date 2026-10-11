@@ -1,0 +1,16 @@
+{
+ "llm": "Qwen/Qwen2.5-7B-Instruct",
+ "gpt": "/kaggle/input/tiny-gpt-sae-checkpoint/gpt_step15000.pt",
+ "sae": "/kaggle/input/tiny-gpt-sae-checkpoint/sae_16x_k32.pt",
+ "data_dir": "/kaggle/tmp/data",
+ "out": "/kaggle/working/autointerp",
+ "layer": 3,
+ "four_bit": true,
+ "fallback_llm": "Qwen/Qwen2.5-3B-Instruct",
+ "n_batches": 400,
+ "n_top": 20,
+ "n_explain": 10,
+ "n_score": 6,
+ "max_hours": 10.5,
+ "limit": null
+}
