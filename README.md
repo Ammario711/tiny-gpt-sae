@@ -62,7 +62,7 @@ Open `notebooks/train_colab.ipynb` in Colab with a T4 GPU and run all cells. The
 
 ## Roadmap
 - [x] **M1: Model + pipeline.** GPT from scratch, data pipeline, training loop, tests, CI, Colab notebook with resume
-- [ ] **M2: Pretraining + evals.** Full TinyStories run, val loss curves, samples, checkpoints released on Hugging Face
+- [x] **M2: Pretraining + evals.** Full TinyStories run (15,000 steps, val loss 1.58), val loss curves, samples. Hugging Face checkpoint release still to do
 - [x] **M3: SAEs (code).** Activation caching, ReLU+L1 and TopK SAEs, dead-feature resampling, evals, feature inspection. Tested on synthetic data with a known dictionary, then run on the trained GPT
 - [x] **M4: SAE evals.** Reconstruction (variance explained), CE loss recovered, L0, dead latents, LLM auto-interpretability with held-out scoring ([results](docs/results.md))
 - [x] **M5: Experiments.** Steering and ablation of hand-labelled features; feature emergence across training checkpoints ([results](docs/results.md))
