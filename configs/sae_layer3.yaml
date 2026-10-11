@@ -1,4 +1,4 @@
-# TopK SAE on the residual stream after block 3 of the ~20M GPT (d_model 384), 16x expansion.
+# TopK SAE on the residual stream after block 3 of the ~30M GPT (d_model 384), 16x expansion.
 # Hyperparameters are starting points to sweep, not tuned values.
 sae:
   d_in: 384

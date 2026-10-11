@@ -1,4 +1,4 @@
-# ~20M-parameter run sized for free Colab (T4, 16 GB, fp16 + GradScaler).
+# ~30M-parameter (~11M non-embedding) run sized for free Colab (T4, 16 GB, fp16 + GradScaler).
 # Effective batch = 32 x 2 = 64 sequences x 256 tokens ≈ 16k tokens/step;
 # 18k steps ≈ 300M tokens (~0.6 epochs of TinyStories).
 # Throughput on a T4 hasn't been measured yet: time the first 200 steps and adjust

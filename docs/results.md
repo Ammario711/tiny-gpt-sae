@@ -6,7 +6,7 @@ and the feature inspector output for the `16x_k32` SAE.
 
 ## Setup
 
-- Base model: the ~20M-parameter tiny-gpt-sae GPT trained on TinyStories (15,000 steps,
+- Base model: the tiny-gpt-sae GPT (~30M parameters total, ~11M non-embedding) trained on TinyStories (15,000 steps,
   val loss 1.58).
 - SAEs: TopK sparse autoencoders on the layer-3 residual stream (d_model = 384), trained
   for 5,000 steps each.
@@ -55,7 +55,8 @@ Method: the inspector dumped the top-activating validation contexts for features
 tokens). A label is given only when the top contexts clearly agree; otherwise the
 feature is marked unclear. These are labels from top activations only — they say what
 the feature responds to most strongly, not that it is monosemantic across its whole
-activation range, and no causal (ablation/steering) checks have been done yet.
+activation range. Causal checks for 8 of these features are in
+[Causal tests](#causal-tests-ablation-and-steering-16x_k32-layer-3) below.
 
 Example notation: the activating token is in `[[ ]]`.
 
@@ -289,7 +290,8 @@ explainer, and prompt explicitly for the marked token plus its preceding context
 
 ## Next steps
 
-- Causal checks: ablate/steer a few of the clear features and measure the effect on
-  next-token predictions.
+- Causal checks: done for 8 features (see above). Steering clearly supports 2 labels
+  (F26, F8). Single-feature ablations are small. Next: ablate groups of related features
+  (e.g. all " to" variants) and test more features.
 - Automated labelling: done (see above). Re-run with hard negatives and more scoring examples.
 - Emergence: done (see above), but limited by a weak seed baseline. Re-run with the full SAE recipe and 2–3 seeds per snapshot.

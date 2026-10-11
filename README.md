@@ -2,10 +2,10 @@
 
 Training a small GPT from scratch on [TinyStories](https://arxiv.org/abs/2305.07759), then using **sparse autoencoders (SAEs)** to find interpretable features in its activations and to study **when those features emerge during training**.
 
-> Status: the GPT is trained (15,000 steps on a Kaggle T4, val loss 1.58) and a 9-config TopK SAE sweep on layer 3 is done: 96.6–98.9% of CE loss recovered at L0 16–64. Numbers, the sparsity-vs-fidelity plot and a hand review of 34 features are in [docs/results.md](docs/results.md). Steering/ablation and feature-emergence experiments are not done yet.
+> Status: the GPT (~30M parameters total, ~11M non-embedding) is trained (15,000 steps on a Kaggle T4, val loss 1.58). A 9-config TopK SAE sweep on layer 3 recovers 96.6–98.9% of CE loss at L0 16–64. Hand review, steering/ablation tests, feature emergence across training checkpoints, and LLM auto-labelling of all 6,144 features are done. Results and caveats are in [docs/results.md](docs/results.md). Remaining: write-up and releasing checkpoints.
 
 ## Research questions
-1. Which interpretable features appear in the residual stream of a ~20M-parameter language model, and in which layers?
+1. Which interpretable features appear in the residual stream of a small (~30M-parameter, ~11M non-embedding) language model, and in which layers?
 2. How do features emerge and change across training checkpoints?
 3. Do SAE features causally control behaviour (steering and ablation)?
 
@@ -24,7 +24,7 @@ src/tiny_gpt_sae/
     evals.py        # L0, variance explained, dead/dense counts, CE loss with SAE spliced in
     inspect.py      # top-activating contexts per feature -> features.json / features.html
     cache.py        # CLI for activation caching
-configs/      # YAML training configs (smoke run, ~20M model, Colab T4)
+configs/      # YAML training configs (smoke run, ~30M model, Colab T4, Kaggle)
 kaggle/       # Kaggle GPU kernel script + metadata
 notebooks/    # train_colab.ipynb: Drive-backed, auto-resuming Colab training
 scripts/      # data preparation
@@ -64,8 +64,8 @@ Open `notebooks/train_colab.ipynb` in Colab with a T4 GPU and run all cells. The
 - [x] **M1: Model + pipeline.** GPT from scratch, data pipeline, training loop, tests, CI, Colab notebook with resume
 - [ ] **M2: Pretraining + evals.** Full TinyStories run, val loss curves, samples, checkpoints released on Hugging Face
 - [x] **M3: SAEs (code).** Activation caching, ReLU+L1 and TopK SAEs, dead-feature resampling, evals, feature inspection. Tested on synthetic data with a known dictionary, then run on the trained GPT
-- [ ] **M4: SAE evals.** Reconstruction (variance explained), CE loss recovered, L0, dead latents ([done](docs/results.md)); auto-interpretability still to do
-- [ ] **M5: Experiments.** Feature emergence across checkpoints; steering and ablation
+- [x] **M4: SAE evals.** Reconstruction (variance explained), CE loss recovered, L0, dead latents, LLM auto-interpretability with held-out scoring ([results](docs/results.md))
+- [x] **M5: Experiments.** Steering and ablation of hand-labelled features; feature emergence across training checkpoints ([results](docs/results.md))
 - [ ] **M6: Write-up.** Report, feature browser, reproducibility guide
 
 ## References

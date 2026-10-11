@@ -1,4 +1,4 @@
-# ~20M-parameter run for a Kaggle GPU kernel (T4 or P100; 12 h session limit).
+# ~30M-parameter (~11M non-embedding) run for a Kaggle GPU kernel (T4 or P100; 12 h session limit).
 # Sized conservatively: 15k steps x ~16k tokens ≈ 250M tokens. That finishes within
 # ~8 h even at 2 s/step, and max_train_hours is a hard stop that saves a checkpoint
 # before Kaggle kills the session. Leave ~1 h for data prep, plots and samples.

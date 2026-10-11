@@ -1,4 +1,4 @@
-# ~20M-parameter GPT on TinyStories (see flagship spec, Milestone 2).
+# ~30M-parameter (~11M non-embedding) GPT on TinyStories (see flagship spec, Milestone 2).
 # Step counts are a starting point, not tuned values.
 model:
   vocab_size: 50257
